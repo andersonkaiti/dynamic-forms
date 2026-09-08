@@ -14,12 +14,8 @@ export function App() {
     },
   })
 
-  // hook sempre utilizado em formulários dinâmicos
-  // mantém os componentes uncontrolled
   const links = useFieldArray({
-    // contexto do form
     control: form.control,
-    // nome da propriedade do formulário
     name: 'links',
   })
 
@@ -42,7 +38,13 @@ export function App() {
                   <Input id="url" {...form.register(`links.${index}.url`)} />
                 </Field>
 
-                <Button size="icon" variant="destructive" className="self-end">
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="destructive"
+                  className="self-end"
+                  onClick={() => links.remove(index)}
+                >
                   <Trash2Icon className="size-4" />
                 </Button>
               </Field>
@@ -50,10 +52,27 @@ export function App() {
           ))}
         </FieldGroup>
 
-        <Button className="w-full space-y-4 border-dashed" variant="outline">
-          <PlusCircleIcon className="size-4" />
-          Adicionar novo link
-        </Button>
+        <div className="flex w-full gap-4">
+          <Button
+            type="button"
+            className="flex-1 space-y-4 border-dashed"
+            variant="outline"
+            onClick={() => links.prepend({ title: '', url: '' })}
+          >
+            <PlusCircleIcon className="size-4" />
+            Adicionar novo link no início
+          </Button>
+
+          <Button
+            type="button"
+            className="flex-1 space-y-4 border-dashed"
+            variant="outline"
+            onClick={() => links.append({ title: '', url: '' })}
+          >
+            <PlusCircleIcon className="size-4" />
+            Adicionar novo link no final
+          </Button>
+        </div>
       </form>
     </div>
   )
