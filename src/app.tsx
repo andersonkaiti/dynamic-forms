@@ -2,7 +2,7 @@ import { Button } from '@components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@components/ui/field'
 import { Input } from '@components/ui/input'
 import { PlusCircleIcon, Trash2Icon } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 
 export function App() {
   const form = useForm({
@@ -14,8 +14,14 @@ export function App() {
     },
   })
 
-  // torna o componente reativo
-  const links = form.watch('links')
+  // hook sempre utilizado em formulários dinâmicos
+  // mantém os componentes uncontrolled
+  const links = useFieldArray({
+    // contexto do form
+    control: form.control,
+    // nome da propriedade do formulário
+    name: 'links',
+  })
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center gap-4 p-5">
@@ -23,17 +29,10 @@ export function App() {
 
       <form className="space-y-4">
         <FieldGroup>
-          {links.map((_, index) => (
-            <div className="grid grid-cols-2 gap-4" key={index}>
+          {links.fields.map(({ id }, index) => (
+            <div className="grid grid-cols-2 gap-4" key={id}>
               <Field className="flex-1">
                 <FieldLabel htmlFor="title">Título</FieldLabel>
-                {/*
-                  '"links" | `links.${number}` | `links.${number}.title` | `links.${number}.url`
-                  
-                  Com objetos, o acesso à propriedade é feito a partir de pontos,
-                  assim como no JavaScript.
-                  Com arrays, o acesso também é feito com ponto.
-                */}
                 <Input id="title" {...form.register(`links.${index}.title`)} />
               </Field>
 
