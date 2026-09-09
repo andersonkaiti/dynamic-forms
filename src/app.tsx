@@ -86,7 +86,6 @@ export function App() {
             Insert
           </Button>
 
-          {/* Move um link de uma posição para outra, atualizando os índices */}
           <Button
             type="button"
             className="flex-1"
@@ -105,7 +104,6 @@ export function App() {
             Replace
           </Button>
 
-          {/* Troca dois links de posição sem atualizar os índices dos demais */}
           <Button
             type="button"
             className="flex-1"
@@ -113,6 +111,18 @@ export function App() {
             onClick={() => links.swap(3, 1)}
           >
             Swap
+          </Button>
+
+          {/* Atualiza um link em um índice específico, remontando o campo na DOM */}
+          <Button
+            type="button"
+            className="flex-1"
+            variant="secondary"
+            onClick={() =>
+              links.update(1, { title: 'Updated title', url: 'Updated URL' })
+            }
+          >
+            Update
           </Button>
         </div>
       </form>
