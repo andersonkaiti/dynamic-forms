@@ -73,6 +73,17 @@ export function App() {
             Adicionar novo link no final
           </Button>
         </div>
+
+        <div className="flex gap-4">
+          <Button
+            type="button"
+            className="flex-1"
+            variant="secondary"
+            onClick={() => links.insert(1, { title: '', url: '' })}
+          >
+            Insert
+          </Button>
+        </div>
       </form>
     </div>
   )
