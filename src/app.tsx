@@ -1,56 +1,17 @@
+import { LinkItem } from '@components/link-item'
 import { Button } from '@components/ui/button'
 import { FieldGroup } from '@components/ui/field'
+import { useDragging } from '@hooks/use-dragging'
+import { useLinks } from '@hooks/use-links'
 import { Reorder } from 'framer-motion'
 import { PlusCircleIcon } from 'lucide-react'
-import { useState } from 'react'
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form'
-import { LinkItem } from './components/link-item'
+import { FormProvider } from 'react-hook-form'
 
 export function App() {
-  const form = useForm({
-    defaultValues: {
-      links: [
-        { title: 'Link 01', url: 'https://jstack.com.br' },
-        { title: 'Link 02', url: 'https://instagram.com' },
-        { title: 'Link 03', url: 'https://youtube.com' },
-        { title: 'Link 04', url: 'https://facebook.com' },
-      ],
-    },
-  })
+  const { form, handleSubmit, links } = useLinks()
 
-  const links = useFieldArray({
-    control: form.control,
-    name: 'links',
-  })
-
-  const [draggingIndex, setDraggingIndex] = useState<null | number>(null)
-
-  const handleSubmit = form.handleSubmit(({ links }) => {
-    console.log(links)
-  })
-
-  function handleDragStart(index: number) {
-    setDraggingIndex(index)
-  }
-
-  function handleDragEnd() {
-    setDraggingIndex(null)
-  }
-
-  function handleReorder(newOrder: typeof links.fields) {
-    if (draggingIndex === null) {
-      return
-    }
-
-    const draggingLink = links.fields[draggingIndex]
-
-    newOrder.forEach((link, index) => {
-      if (link === draggingLink) {
-        links.move(draggingIndex, index)
-        setDraggingIndex(index)
-      }
-    })
-  }
+  const { handleDragStart, handleDragEnd, handleReorder, draggingIndex } =
+    useDragging({ items: links })
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center gap-4 p-5">
