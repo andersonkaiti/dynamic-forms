@@ -26,8 +26,8 @@ export function App() {
 
   const [draggingIndex, setDraggingIndex] = useState<null | number>(null)
 
-  const handleSubmit = form.handleSubmit((data) => {
-    console.log(data)
+  const handleSubmit = form.handleSubmit(({ links }) => {
+    console.log(links)
   })
 
   function handleDragStart(index: number) {
@@ -38,7 +38,20 @@ export function App() {
     setDraggingIndex(null)
   }
 
-  function handleReorder() {}
+  function handleReorder(newOrder: typeof links.fields) {
+    if (draggingIndex === null) {
+      return
+    }
+
+    const draggingLink = links.fields[draggingIndex]
+
+    newOrder.forEach((link, index) => {
+      if (link === draggingLink) {
+        links.move(draggingIndex, index)
+        setDraggingIndex(index)
+      }
+    })
+  }
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center gap-4 p-5">
@@ -53,6 +66,7 @@ export function App() {
                 value={link}
                 onDragStart={() => handleDragStart(index)}
                 onDragEnd={handleDragEnd}
+                className="relative"
               >
                 <div
                   className={cn(
