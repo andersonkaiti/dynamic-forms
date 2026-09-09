@@ -10,6 +10,8 @@ export function App() {
       links: [
         { title: 'Link 01', url: 'https://jstack.com.br' },
         { title: 'Link 02', url: 'https://instagram.com' },
+        { title: 'Link 03', url: 'https://youtube.com' },
+        { title: 'Link 04', url: 'https://facebook.com' },
       ],
     },
   })
@@ -82,6 +84,35 @@ export function App() {
             onClick={() => links.insert(1, { title: '', url: '' })}
           >
             Insert
+          </Button>
+
+          {/* Move um link de uma posição para outra, atualizando os índices */}
+          <Button
+            type="button"
+            className="flex-1"
+            variant="secondary"
+            onClick={() => links.move(3, 1)}
+          >
+            Move
+          </Button>
+
+          <Button
+            type="button"
+            className="flex-1"
+            variant="secondary"
+            onClick={() => links.replace([])}
+          >
+            Replace
+          </Button>
+
+          {/* Troca dois links de posição sem atualizar os índices dos demais */}
+          <Button
+            type="button"
+            className="flex-1"
+            variant="secondary"
+            onClick={() => links.swap(3, 1)}
+          >
+            Swap
           </Button>
         </div>
       </form>
