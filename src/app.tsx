@@ -1,7 +1,10 @@
 import { Button } from '@components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@components/ui/field'
 import { Input } from '@components/ui/input'
+import { cn } from 'cn'
+import { Reorder } from 'framer-motion'
 import { PlusCircleIcon, Trash2Icon } from 'lucide-react'
+import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 
 export function App() {
@@ -21,38 +24,76 @@ export function App() {
     name: 'links',
   })
 
+  const [draggingIndex, setDraggingIndex] = useState<null | number>(null)
+
+  const handleSubmit = form.handleSubmit((data) => {
+    console.log(data)
+  })
+
+  function handleDragStart(index: number) {
+    setDraggingIndex(index)
+  }
+
+  function handleDragEnd() {
+    setDraggingIndex(null)
+  }
+
+  function handleReorder() {}
+
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-4xl flex-col justify-center gap-4 p-5">
       <h1 className="font-semibold text-2xl tracking-tight">Links</h1>
 
-      <form className="space-y-4">
-        <FieldGroup>
-          {links.fields.map(({ id }, index) => (
-            <div className="grid grid-cols-2 gap-4" key={id}>
-              <Field className="flex-1">
-                <FieldLabel htmlFor="title">Título</FieldLabel>
-                <Input id="title" {...form.register(`links.${index}.title`)} />
-              </Field>
-
-              <Field className="flex-1" orientation="horizontal">
-                <Field>
-                  <FieldLabel htmlFor="url">URL</FieldLabel>
-                  <Input id="url" {...form.register(`links.${index}.url`)} />
-                </Field>
-
-                <Button
-                  type="button"
-                  size="icon"
-                  variant="destructive"
-                  className="self-end"
-                  onClick={() => links.remove(index)}
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <Reorder.Group axis="y" values={links.fields} onReorder={handleReorder}>
+          <FieldGroup>
+            {links.fields.map((link, index) => (
+              <Reorder.Item
+                key={link.id}
+                value={link}
+                onDragStart={() => handleDragStart(index)}
+                onDragEnd={handleDragEnd}
+              >
+                <div
+                  className={cn(
+                    'grid grid-cols-2 gap-4 transition-opacity',
+                    draggingIndex !== null &&
+                      draggingIndex !== index &&
+                      'opacity-50',
+                  )}
                 >
-                  <Trash2Icon className="size-4" />
-                </Button>
-              </Field>
-            </div>
-          ))}
-        </FieldGroup>
+                  <Field className="flex-1">
+                    <FieldLabel htmlFor="title">Título</FieldLabel>
+                    <Input
+                      id="title"
+                      {...form.register(`links.${index}.title`)}
+                    />
+                  </Field>
+
+                  <Field className="flex-1" orientation="horizontal">
+                    <Field>
+                      <FieldLabel htmlFor="url">URL</FieldLabel>
+                      <Input
+                        id="url"
+                        {...form.register(`links.${index}.url`)}
+                      />
+                    </Field>
+
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="destructive"
+                      className="self-end"
+                      onClick={() => links.remove(index)}
+                    >
+                      <Trash2Icon className="size-4" />
+                    </Button>
+                  </Field>
+                </div>
+              </Reorder.Item>
+            ))}
+          </FieldGroup>
+        </Reorder.Group>
 
         <div className="flex w-full gap-4">
           <Button
@@ -76,55 +117,9 @@ export function App() {
           </Button>
         </div>
 
-        <div className="flex gap-4">
-          <Button
-            type="button"
-            className="flex-1"
-            variant="secondary"
-            onClick={() => links.insert(1, { title: '', url: '' })}
-          >
-            Insert
-          </Button>
-
-          <Button
-            type="button"
-            className="flex-1"
-            variant="secondary"
-            onClick={() => links.move(3, 1)}
-          >
-            Move
-          </Button>
-
-          <Button
-            type="button"
-            className="flex-1"
-            variant="secondary"
-            onClick={() => links.replace([])}
-          >
-            Replace
-          </Button>
-
-          <Button
-            type="button"
-            className="flex-1"
-            variant="secondary"
-            onClick={() => links.swap(3, 1)}
-          >
-            Swap
-          </Button>
-
-          {/* Atualiza um link em um índice específico, remontando o campo na DOM */}
-          <Button
-            type="button"
-            className="flex-1"
-            variant="secondary"
-            onClick={() =>
-              links.update(1, { title: 'Updated title', url: 'Updated URL' })
-            }
-          >
-            Update
-          </Button>
-        </div>
+        <Button type="submit" className="w-full">
+          Enviar
+        </Button>
       </form>
     </div>
   )
