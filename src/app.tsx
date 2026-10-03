@@ -41,7 +41,7 @@ export function App() {
             </FieldGroup>
           </Reorder.Group>
 
-          <div className="flex w-full gap-4">
+          <div className="flex w-full flex-col gap-4 sm:flex-row">
             <Button
               type="button"
               className="flex-1 space-y-4 border-dashed"

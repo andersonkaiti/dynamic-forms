@@ -42,7 +42,7 @@ export function LinkItem({
     >
       <div
         className={cn(
-          'grid grid-cols-2 gap-4 transition-opacity',
+          'grid grid-cols-1 gap-4 transition-opacity sm:grid-cols-2',
           isDraggingActive && 'opacity-50',
         )}
       >
